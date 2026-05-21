@@ -1,0 +1,152 @@
+1779279496: mosquitto version 2.1.2 starting
+1779279496: Config loaded from /mosquitto/config/mosquitto.conf.
+1779279496: Bridge support available.
+1779279496: Persistence support available.
+1779279496: TLS support available.
+1779279496: TLS-PSK support available.
+1779279496: Websockets support available.
+1779279496: Opening ipv4 listen socket on port 1883.
+1779279496: Opening ipv6 listen socket on port 1883.
+1779279496: mosquitto version 2.1.2 running
+1779279762: New connection from 172.19.0.1:36846 on port 1883.
+1779279762: New client connected from 172.19.0.1:36846 as mqttx_28ab356f (p5, c1, k60).
+1779280218: Client mqttx_28ab356f [172.19.0.1:36846] disconnected: exceeded timeout.
+1779280223: New connection from 172.19.0.1:58092 on port 1883.
+1779280223: New client connected from 172.19.0.1:58092 as mqttx_28ab356f (p5, c1, k60).
+1779280692: mosquitto version 2.1.2 terminating
+1779280692: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779285410: mosquitto version 2.1.2 starting
+1779285410: Config loaded from /mosquitto/config/mosquitto.conf.
+1779285410: Bridge support available.
+1779285410: Persistence support available.
+1779285410: TLS support available.
+1779285410: TLS-PSK support available.
+1779285410: Websockets support available.
+1779285410: Opening ipv4 listen socket on port 1883.
+1779285410: Opening ipv6 listen socket on port 1883.
+1779285410: mosquitto version 2.1.2 running
+1779287211: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779287935: New connection from 172.18.0.1:49918 on port 1883.
+1779287935: New client connected from 172.18.0.1:49918 as python-client (p4, c1, k60).
+1779287942: Client python-client [172.18.0.1:49918] disconnected: connection closed by client.
+1779287992: New connection from 172.18.0.1:33906 on port 1883.
+1779287992: New client connected from 172.18.0.1:33906 as python-client (p4, c1, k60).
+1779288002: Client python-client [172.18.0.1:33906] disconnected: connection closed by client.
+1779288013: New connection from 172.18.0.1:35776 on port 1883.
+1779288013: New client connected from 172.18.0.1:35776 as mqttx_28ab356f (p5, c1, k60).
+1779288026: New connection from 172.18.0.1:34396 on port 1883.
+1779288026: New client connected from 172.18.0.1:34396 as python-client (p4, c1, k60).
+1779288035: Client python-client [172.18.0.1:34396] disconnected: connection closed by client.
+1779288039: Client mqttx_28ab356f [172.18.0.1:35776] disconnected.
+1779289012: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779290812: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779292613: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779292867: New connection from 172.18.0.1:33324 on port 1883.
+1779292867: New client connected from 172.18.0.1:33324 as python-client (p4, c1, k60).
+1779292871: New connection from 172.18.0.1:33328 on port 1883.
+1779292871: New client connected from 172.18.0.1:33328 as mqttx_28ab356f (p5, c1, k60).
+1779292958: Client python-client [172.18.0.1:33324] disconnected: exceeded timeout.
+1779292993: New connection from 172.18.0.1:45806 on port 1883.
+1779292993: New client connected from 172.18.0.1:45806 as python-client (p4, c1, k60).
+1779293057: Client python-client [172.18.0.1:45806] disconnected: connection closed by client.
+1779293478: Client mqttx_28ab356f [172.18.0.1:33328] disconnected: exceeded timeout.
+1779293482: New connection from 172.18.0.1:52508 on port 1883.
+1779293482: New client connected from 172.18.0.1:52508 as mqttx_28ab356f (p5, c1, k60).
+1779293727: New connection from 172.18.0.1:51456 on port 1883.
+1779293727: New client connected from 172.18.0.1:51456 as python-client (p4, c1, k60).
+1779293817: Client python-client [172.18.0.1:51456] disconnected: exceeded timeout.
+1779294202: Client mqttx_28ab356f [172.18.0.1:52508] disconnected: exceeded timeout.
+1779294206: New connection from 172.18.0.1:57854 on port 1883.
+1779294206: New client connected from 172.18.0.1:57854 as mqttx_28ab356f (p5, c1, k60).
+1779294414: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779294726: Client mqttx_28ab356f [172.18.0.1:57854] disconnected: exceeded timeout.
+1779294730: New connection from 172.18.0.1:46538 on port 1883.
+1779294730: New client connected from 172.18.0.1:46538 as mqttx_28ab356f (p5, c1, k60).
+1779295386: Client mqttx_28ab356f [172.18.0.1:46538] disconnected: exceeded timeout.
+1779295390: New connection from 172.18.0.1:36418 on port 1883.
+1779295390: New client connected from 172.18.0.1:36418 as mqttx_28ab356f (p5, c1, k60).
+1779295644: New connection from 172.18.0.1:42214 on port 1883.
+1779295644: New client connected from 172.18.0.1:42214 as python-client (p4, c1, k60).
+1779295821: Client python-client [172.18.0.1:42214] disconnected: connection closed by client.
+1779296110: Client mqttx_28ab356f [172.18.0.1:36418] disconnected: exceeded timeout.
+1779296114: New connection from 172.18.0.1:48454 on port 1883.
+1779296114: New client connected from 172.18.0.1:48454 as mqttx_28ab356f (p5, c1, k60).
+1779296215: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779296706: Client mqttx_28ab356f [172.18.0.1:48454] disconnected: exceeded timeout.
+1779296710: New connection from 172.18.0.1:48906 on port 1883.
+1779296710: New client connected from 172.18.0.1:48906 as mqttx_28ab356f (p5, c1, k60).
+1779297246: Client mqttx_28ab356f [172.18.0.1:48906] disconnected: exceeded timeout.
+1779297250: New connection from 172.18.0.1:34168 on port 1883.
+1779297250: New client connected from 172.18.0.1:34168 as mqttx_28ab356f (p5, c1, k60).
+1779297906: Client mqttx_28ab356f [172.18.0.1:34168] disconnected: exceeded timeout.
+1779297910: New connection from 172.18.0.1:59822 on port 1883.
+1779297910: New client connected from 172.18.0.1:59822 as mqttx_28ab356f (p5, c1, k60).
+1779298016: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779298446: Client mqttx_28ab356f [172.18.0.1:59822] disconnected: exceeded timeout.
+1779298450: New connection from 172.18.0.1:51322 on port 1883.
+1779298450: New client connected from 172.18.0.1:51322 as mqttx_28ab356f (p5, c1, k60).
+1779298986: Client mqttx_28ab356f [172.18.0.1:51322] disconnected: exceeded timeout.
+1779298990: New connection from 172.18.0.1:50588 on port 1883.
+1779298990: New client connected from 172.18.0.1:50588 as mqttx_28ab356f (p5, c1, k60).
+1779299526: Client mqttx_28ab356f [172.18.0.1:50588] disconnected: exceeded timeout.
+1779299530: New connection from 172.18.0.1:47350 on port 1883.
+1779299530: New client connected from 172.18.0.1:47350 as mqttx_28ab356f (p5, c1, k60).
+1779299621: Client mqttx_28ab356f [172.18.0.1:47350] disconnected: exceeded timeout.
+1779299817: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779301618: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779301764: New connection from 172.18.0.1:43992 on port 1883.
+1779301764: New client connected from 172.18.0.1:43992 as python-client (p4, c1, k60).
+1779301764: Client python-client [172.18.0.1:43992] disconnected: connection closed by client.
+1779301793: New connection from 172.18.0.1:44118 on port 1883.
+1779301793: New client connected from 172.18.0.1:44118 as python-client (p4, c1, k60).
+1779301794: Client python-client [172.18.0.1:44118] disconnected: connection closed by client.
+1779301857: New connection from 172.18.0.1:46274 on port 1883.
+1779301857: New client connected from 172.18.0.1:46274 as python-client (p4, c1, k60).
+1779301858: Client python-client [172.18.0.1:46274] disconnected: connection closed by client.
+1779301948: New connection from 172.18.0.1:52422 on port 1883.
+1779301948: New client connected from 172.18.0.1:52422 as python-client (p4, c1, k60).
+1779301984: Client python-client [172.18.0.1:52422] disconnected: connection closed by client.
+1779302053: New connection from 172.18.0.1:47458 on port 1883.
+1779302053: New client connected from 172.18.0.1:47458 as python-client (p4, c1, k60).
+1779302077: Client python-client [172.18.0.1:47458] disconnected: connection closed by client.
+1779302079: New connection from 172.18.0.1:50430 on port 1883.
+1779302079: New client connected from 172.18.0.1:50430 as python-client (p4, c1, k60).
+1779302098: Client python-client [172.18.0.1:50430] disconnected: connection closed by client.
+1779302100: New connection from 172.18.0.1:47964 on port 1883.
+1779302100: New client connected from 172.18.0.1:47964 as python-client (p4, c1, k60).
+1779302128: New connection from 172.18.0.1:43420 on port 1883.
+1779302128: New client connected from 172.18.0.1:43420 as mqttx_28ab356f (p5, c1, k60).
+1779302133: Client python-client [172.18.0.1:47964] disconnected: connection closed by client.
+1779302136: New connection from 172.18.0.1:38536 on port 1883.
+1779302136: New client connected from 172.18.0.1:38536 as python-client (p4, c1, k60).
+1779302193: Client python-client [172.18.0.1:38536] disconnected: connection closed by client.
+1779302198: New connection from 172.18.0.1:42312 on port 1883.
+1779302198: New client connected from 172.18.0.1:42312 as python-client (p4, c1, k60).
+1779302242: Client python-client [172.18.0.1:42312] disconnected: connection closed by client.
+1779302362: New connection from 172.18.0.1:39938 on port 1883.
+1779302362: New client connected from 172.18.0.1:39938 as python-client (p4, c1, k60).
+1779302366: Client python-client [172.18.0.1:39938] disconnected: connection closed by client.
+1779302458: New connection from 172.18.0.1:59696 on port 1883.
+1779302458: New client connected from 172.18.0.1:59696 as python-client (p4, c1, k60).
+1779302607: Client python-client [172.18.0.1:59696] disconnected: connection closed by client.
+1779303186: Client mqttx_28ab356f [172.18.0.1:43420] disconnected: exceeded timeout.
+1779303190: New connection from 172.18.0.1:45794 on port 1883.
+1779303190: New client connected from 172.18.0.1:45794 as mqttx_28ab356f (p5, c1, k60).
+1779303419: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779303726: Client mqttx_28ab356f [172.18.0.1:45794] disconnected: exceeded timeout.
+1779303730: New connection from 172.18.0.1:42702 on port 1883.
+1779303730: New client connected from 172.18.0.1:42702 as mqttx_28ab356f (p5, c1, k60).
+1779304266: Client mqttx_28ab356f [172.18.0.1:42702] disconnected: exceeded timeout.
+1779304270: New connection from 172.18.0.1:53186 on port 1883.
+1779304270: New client connected from 172.18.0.1:53186 as mqttx_28ab356f (p5, c1, k60).
+1779304866: Client mqttx_28ab356f [172.18.0.1:53186] disconnected: exceeded timeout.
+1779304870: New connection from 172.18.0.1:48464 on port 1883.
+1779304870: New client connected from 172.18.0.1:48464 as mqttx_28ab356f (p5, c1, k60).
+1779305220: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779305466: Client mqttx_28ab356f [172.18.0.1:48464] disconnected: exceeded timeout.
+1779305470: New connection from 172.18.0.1:57478 on port 1883.
+1779305470: New client connected from 172.18.0.1:57478 as mqttx_28ab356f (p5, c1, k60).
+1779305731: Client mqttx_28ab356f [172.18.0.1:57478] disconnected.
+1779307021: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1779307053: mosquitto version 2.1.2 terminating
+1779307053: Saving in-memory database to /mosquitto/data//mosquitto.db.
