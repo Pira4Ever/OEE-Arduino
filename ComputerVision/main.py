@@ -10,21 +10,15 @@ subscribe_topic = "oee/arduino"
 class Detector():
     cap: cv2.VideoCapture
     fps: int
-    threshold_value = 135
-    blur_size = 21
+    threshold_value = 120
+    blur_size = 18
     min_area = 2000
-    epsilon_factor = 0.07
+    epsilon_factor = 0.02
     use_adaptive = True  # False = limiar fixo, True = adaptativo
     index_map: Dict[int, str] = {0: 'BOA', 1: 'RUIM'}
     def __init__(self, source: str | int):
         self.cap = cv2.VideoCapture(source)
-        self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
-        cv2.namedWindow('Ajustes')
-        cv2.createTrackbar('Threshold', 'Ajustes', self.threshold_value, 255, self.nothing)
-        cv2.createTrackbar('Blur (ímpar)', 'Ajustes', self.blur_size, 30, self.nothing)
-        cv2.createTrackbar('Min Area', 'Ajustes', self.min_area, 2000, self.nothing)
-        cv2.createTrackbar('Epsilon (%)', 'Ajustes', int(self.epsilon_factor * 100), 20, self.nothing)
-        cv2.createTrackbar('Adaptativo (0=Fixo,1=Adapt)', 'Ajustes', 0, 1, self.nothing)   
+        self.fps = int(self.cap.get(cv2.CAP_PROP_FPS)) 
 
     def nothing(self, x):
         pass 
@@ -35,13 +29,6 @@ class Detector():
             ret, frame = self.cap.read()
             if not ret:
                 break
-
-            # Lê os valores atuais das trackbars
-            self.threshold_value = cv2.getTrackbarPos('Threshold', 'Ajustes')
-            self.blur_size = cv2.getTrackbarPos('Blur (ímpar)', 'Ajustes')
-            self.min_area = cv2.getTrackbarPos('Min Area', 'Ajustes')
-            self.epsilon_factor = cv2.getTrackbarPos('Epsilon (%)', 'Ajustes') / 100.0
-            self.use_adaptive = cv2.getTrackbarPos('Adaptativo (0=Fixo,1=Adapt)', 'Ajustes') == 1
 
             # Garante que o blur seja ímpar (necessário para GaussianBlur)
             if self.blur_size < 1:
@@ -80,7 +67,13 @@ class Detector():
                 else:
                     detections[1] = detections[1] + 1
 
-        return self.index_map.get(detections.index(max(detections)))
+        detectado = self.index_map.get(detections.index(max(detections)))
+
+        print(detections)
+
+        print(detectado)
+
+        return detectado
 
 
 class MyClient():
@@ -110,7 +103,7 @@ class MyClient():
     def on_message(self, client, userdata, msg):
         if msg.topic == 'oee/arduino':
             if msg.payload.decode() == 'scan':
-                self.publish(f'Detected: {self.detector.scan()}')
+                self.publish(f'{self.detector.scan()}')
             elif msg.payload.decode() == 'stop':
                 self.detector.cap.release()
                 cv2.destroyAllWindows()
