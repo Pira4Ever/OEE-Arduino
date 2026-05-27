@@ -59,6 +59,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
     } else if(messageTemp == "RUIM"){
       digitalWrite(ledRuim, HIGH);
     }
+    delay(2000);
+    digitalWrite(ledBom, LOW);
+    digitalWrite(ledRuim, LOW);
   }
 }
 
@@ -99,14 +102,15 @@ void loop() {
     reconnect();
   }
 
-  digitalWrite(pinStatus, HIGH);
-
   client.loop();
 
   buttonState = digitalRead(buttonPin);
 
   if (buttonState == LOW && lastButtonState == HIGH) {
     if (millis() - lastDebounceTime > 200) {
+      analogWrite(pinStatus,210);
+      delay(4000);
+      digitalWrite(pinStatus, LOW);
       client.publish("oee/arduino", "scan");
       lastDebounceTime = millis();
     }
