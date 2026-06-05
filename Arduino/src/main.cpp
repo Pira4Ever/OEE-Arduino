@@ -11,10 +11,13 @@ const char* mqtt_server = MQTT_BROKER;
 // ~= 11/RPM
 
 // Pin variables
-const int ledBom = D1;
-const int ledRuim = D2;
+const int motorBom = D1;
+const int motorRuim = D2;
 const int buttonPin = D5;
-const int pinStatus = D0;
+const int motorPrincipal = D0;
+const int ledBom = D6; // ver porta
+const int ledRuim = D7; // ver porta
+const int ledStatus = D8; // ver porta
 
 // Button variables
 int buttonState = HIGH;
@@ -52,14 +55,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(messageTemp);
   
   if (String(topic) == "oee/pc") {
-    digitalWrite(ledBom, LOW);
-    digitalWrite(ledRuim, LOW);
     if(messageTemp == "BOA"){
+      digitalWrite(motorBom, HIGH);
       digitalWrite(ledBom, HIGH);
     } else if(messageTemp == "RUIM"){
+      digitalWrite(motorRuim, HIGH);
       digitalWrite(ledRuim, HIGH);
     }
     delay(2000);
+    digitalWrite(motorBom, LOW);
+    digitalWrite(motorRuim, LOW);
     digitalWrite(ledBom, LOW);
     digitalWrite(ledRuim, LOW);
   }
@@ -79,10 +84,13 @@ void reconnect() {
 
 void setup() {
   Serial.begin(9600);
+  pinMode(motorBom, OUTPUT);
+  pinMode(motorRuim, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(motorPrincipal, OUTPUT);
   pinMode(ledBom, OUTPUT);
   pinMode(ledRuim, OUTPUT);
-  pinMode(buttonPin, INPUT_PULLUP);
-  pinMode(pinStatus, OUTPUT);
+  pinMode(ledStatus, OUTPUT);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
@@ -90,17 +98,21 @@ void setup() {
 
 void loop() {
   if (WiFi.status() != WL_CONNECTED) {
-    digitalWrite(ledBom, LOW);
-    digitalWrite(ledRuim, LOW);
-    digitalWrite(pinStatus, LOW);
+    // digitalWrite(motorBom, LOW);
+    // digitalWrite(motorRuim, LOW);
+    digitalWrite(motorPrincipal, LOW);
+    digitalWrite(ledStatus, LOW);
     setup_wifi();
   }
   if (!client.connected()) {
-    digitalWrite(ledBom, LOW);
-    digitalWrite(ledRuim, LOW);
-    digitalWrite(pinStatus, LOW);
+    // digitalWrite(motorBom, LOW);
+    // digitalWrite(motorRuim, LOW);
+    digitalWrite(motorPrincipal, LOW);
+    digitalWrite(ledStatus, LOW);
     reconnect();
   }
+
+  digitalWrite(ledStatus, HIGH);
 
   client.loop();
 
@@ -108,9 +120,9 @@ void loop() {
 
   if (buttonState == LOW && lastButtonState == HIGH) {
     if (millis() - lastDebounceTime > 200) {
-      analogWrite(pinStatus,210);
+      analogWrite(motorPrincipal,210);
       delay(4000);
-      digitalWrite(pinStatus, LOW);
+      digitalWrite(motorPrincipal, LOW);
       client.publish("oee/arduino", "scan");
       lastDebounceTime = millis();
     }

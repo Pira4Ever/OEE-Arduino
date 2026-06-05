@@ -1,9 +1,16 @@
 import cv2
 from paho.mqtt import client as mqtt_client
+from paho.mqtt.enums import CallbackAPIVersion
 from typing import List, Dict
+from dotenv import load_dotenv
+from os import getenv
 
-broker = '127.0.0.1'
-port = 1883
+load_dotenv(".env")
+
+broker = getenv("MQTT_BROKER", "127.0.0.1")
+port = int(getenv("MQTT_PORT", "1883"))
+mqtt_user = getenv("MQTT_USER", "")
+mqtt_pass = getenv("MQTT_PASS", "")
 publish_topic = "oee/pc"
 subscribe_topic = "oee/arduino"
 
@@ -81,9 +88,12 @@ class MyClient():
     publish_topic: str
     detector: Detector
     def __init__(self, broker: str, port: int, publish_topic: str, subscribe_topic: str):
-        self.client = mqtt_client.Client(client_id='python-client',callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
+        self.client = mqtt_client.Client(client_id='python-client',callback_api_version=CallbackAPIVersion.VERSION2,protocol=mqtt_client.MQTTv5)
         self.client.on_connect = self.on_connect
         self.publish_topic = publish_topic
+        if (mqtt_user != "" or mqtt_pass != ""):
+            self.client.tls_set()
+            self.client.username_pw_set(mqtt_user, mqtt_pass)
         self.client.connect(broker, port)
         self.client.subscribe(subscribe_topic)
         self.client.on_message = self.on_message
