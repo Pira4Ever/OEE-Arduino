@@ -4,6 +4,7 @@ from paho.mqtt.enums import CallbackAPIVersion
 from typing import List, Dict
 from dotenv import load_dotenv
 from os import getenv
+from psycopg2 import connect
 
 load_dotenv(".env")
 
@@ -13,6 +14,11 @@ mqtt_user = getenv("MQTT_USER", "")
 mqtt_pass = getenv("MQTT_PASS", "")
 publish_topic = "oee/pc"
 subscribe_topic = "oee/arduino"
+database_host = getenv("DATABASE_HOST", "localhost")
+database_port = getenv("DATABASE_PORT", "8888")
+database_name = getenv("DATABASE_NAME", "mydatabase")
+database_user = getenv("DATABASE_USER", "myuser")
+database_pass = getenv("DATABASE_PASS", "mysecretpassword")
 
 class Detector():
     cap: cv2.VideoCapture
@@ -99,6 +105,16 @@ class MyClient():
         self.client.on_message = self.on_message
         self.detector = Detector(1)
         self.client.loop_start()
+
+        self.conexao = connect(
+            host=database_host,
+            database=database_name,
+            user=database_user,
+            password=database_pass,
+            port=int(database_port)
+        )
+
+        self.cursor = self.conexao.cursor()
         
     def on_connect(self, client, userdata, flags, reason_code, properties):
         if reason_code == 0:
@@ -113,7 +129,13 @@ class MyClient():
     def on_message(self, client, userdata, msg):
         if msg.topic == 'oee/arduino':
             if msg.payload.decode() == 'scan':
-                self.publish(f'{self.detector.scan()}')
+                resultado = self.detector.scan()
+                self.publish(f'{resultado}')
+                if resultado == 'BOA':
+                    self.cursor.execute("INSERT INTO pecas (status) VALUES ('boa');")
+                elif resultado == 'RUIM':
+                    self.cursor.execute("INSERT INTO pecas (status) VALUES ('ruim');")
+                self.conexao.commit()
             elif msg.payload.decode() == 'stop':
                 self.detector.cap.release()
                 cv2.destroyAllWindows()
