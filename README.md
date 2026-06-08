@@ -42,24 +42,27 @@ mesma rede.
         │  • motor principal (esteira) │   │  • em "scan": captura frames da     │
         │  • publica "scan"            │   │    câmera e classifica a peça       │
         │  • assina  oee/pc            │   │  • publica "BOA"/"RUIM" em oee/pc   │
-        │  • em "BOA"/"RUIM":          │   └─────────────────────────────────────┘
-        │    aciona motor + LED        │
-        └──────────────────────────────┘
-
-        ┌──────────────────────────────┐   ┌─────────────────────────────────────┐
-        │   PostgreSQL (tabela pecas)   │◀──│   Frontend (Next.js + MUI Charts)   │
-        │   id, horario, status         │   │   dashboard de peças boas × ruins   │
-        └──────────────────────────────┘   └─────────────────────────────────────┘
+        │  • em "BOA"/"RUIM":          │   │  • grava o resultado no PostgreSQL  │
+        │    aciona motor + LED        │   └──────────────────┬──────────────────┘
+        └──────────────────────────────┘                     │ INSERT INTO pecas
+                                                              ▼
+        ┌─────────────────────────────────────┐   ┌──────────────────────────────┐
+        │   Frontend (Next.js + Tailwind)     │──▶│   PostgreSQL (tabela pecas)   │
+        │   dashboard SSR de boas × ruins     │   │   id, horario, status         │
+        │   hospedado na Vercel               │   └──────────────────────────────┘
+        └─────────────────────────────────────┘
 ```
+
+> 🌐 **Dashboard online:** <https://oee-arduino-frontend.vercel.app/>
 
 O repositório é um monorepo com quatro componentes independentes:
 
 | Pasta             | Tecnologia                         | Papel                                                        |
 | ----------------- | ---------------------------------- | ------------------------------------------------------------ |
 | `Arduino/`        | C++ / PlatformIO (ESP8266 NodeMCU) | Controle físico da esteira, botão, motores desviadores e LEDs |
-| `ComputerVision/` | Python 3.13 / OpenCV / paho-mqtt   | Captura e classificação das peças por visão computacional    |
+| `ComputerVision/` | Python 3.13 / OpenCV / paho-mqtt / psycopg2 | Classifica as peças por visão e grava o resultado no PostgreSQL |
 | `Backend/`        | Docker Compose (Mosquitto + PostgreSQL) | Broker MQTT e banco de dados                            |
-| `frontend/`       | Next.js 16 / React 19 / MUI X Charts | Dashboard de visualização da produção                      |
+| `frontend/`       | Next.js 16 / React 19 / Tailwind CSS (SSR) | Dashboard de visualização (hospedado na Vercel)         |
 
 ---
 
@@ -76,7 +79,9 @@ O repositório é um monorepo com quatro componentes independentes:
    - conta os vértices do contorno aproximado: **< 6 vértices → BOA**, **≥ 6 → RUIM**.
 5. Por votação majoritária entre os frames, define o resultado e publica `"BOA"` ou `"RUIM"` no
    tópico **`oee/pc`**.
-6. O ESP8266 recebe o resultado e, por 2 s, aciona o **motor desviador** e o **LED**
+6. Em seguida o serviço de visão **grava o resultado no PostgreSQL** (`INSERT INTO pecas`,
+   com `status` = `boa` ou `ruim`), alimentando o dashboard.
+7. O ESP8266 recebe o resultado e, por 2 s, aciona o **motor desviador** e o **LED**
    correspondentes (`motorBom`/`ledBom` ou `motorRuim`/`ledRuim`), separando a peça.
 
 > **Critério de classificação:** o algoritmo atual distingue as peças pelo **número de lados**
@@ -117,16 +122,22 @@ Firmware em C++ para **NodeMCU v2 (ESP8266)**, construído com **PlatformIO**.
 
 ### ComputerVision — `ComputerVision/`
 
-Aplicação Python que faz a ponte entre a câmera e o MQTT.
+Aplicação Python que faz a ponte entre a câmera, o MQTT e o banco de dados.
 
 - Classe `Detector`: abre a câmera (`cv2.VideoCapture`) e implementa a classificação descrita acima.
 - Classe `MyClient`: cliente MQTT (paho-mqtt, MQTT v5). Assina `oee/arduino`, responde a `scan`
   (publica o resultado) e a `stop` (libera a câmera e encerra o loop).
+- **Acesso ao banco de dados:** ao receber `scan`, além de publicar `"BOA"`/`"RUIM"` em `oee/pc`,
+  o serviço conecta ao **PostgreSQL** via `psycopg2` e executa um `INSERT INTO pecas (status)`
+  (`'boa'` ou `'ruim'`), com `commit` a cada peça. É este serviço que **popula** a tabela lida
+  pelo dashboard.
 - Configuração por variáveis de ambiente em `ComputerVision/.env`:
-  `MQTT_BROKER`, `MQTT_PORT`, `MQTT_USER`, `MQTT_PASS`. Se usuário/senha forem informados, o
-  cliente habilita TLS automaticamente.
+  - MQTT: `MQTT_BROKER`, `MQTT_PORT`, `MQTT_USER`, `MQTT_PASS`. Se usuário/senha forem informados,
+    o cliente habilita TLS automaticamente.
+  - Banco: `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASS`
+    (defaults: `localhost` / `8888` / `mydatabase` / `myuser` / `mysecretpassword`).
 - Dependências (ver [ComputerVision/pyproject.toml](ComputerVision/pyproject.toml)):
-  `opencv-python`, `paho-mqtt`, `python-dotenv`. Requer **Python ≥ 3.13**.
+  `opencv-python`, `paho-mqtt`, `psycopg2`, `python-dotenv`. Requer **Python ≥ 3.13**.
 
 > A fonte de vídeo está fixada como `Detector(1)` (segunda câmera do sistema). Ajuste o índice
 > para `0` (webcam padrão) ou para o caminho/URL do seu dispositivo conforme necessário.
@@ -145,11 +156,18 @@ Infraestrutura local via **Docker Compose** ([Backend/docker-compose.yaml](Backe
 
 ### Frontend — `frontend/`
 
-Dashboard em **Next.js 16 / React 19** com **Material UI** e **MUI X Charts**.
+Dashboard em **Next.js 16 / React 19** com **Tailwind CSS**, renderizado no servidor (SSR).
 
+- 🌐 **Em produção na Vercel:** <https://oee-arduino-frontend.vercel.app/>
 - A página [frontend/src/app/page.tsx](frontend/src/app/page.tsx) é um Server Component que
-  consulta o PostgreSQL diretamente (via `pg`) e exibe um gráfico de barras de peças **boas × ruins**.
-- Conexão configurada para `localhost:8888` (o mesmo Postgres do Compose).
+  consulta o PostgreSQL diretamente (via `pg`) e exibe KPIs (total, boas, ruins, qualidade) e
+  gráficos de peças **boas × ruins** por dia, por semana e por hora.
+- Os gráficos são **SVG puro** renderizado no servidor (sem biblioteca de chart, sem JS no cliente).
+- Botão **"Baixar Excel"** → Route Handler [frontend/src/app/api/export/route.ts](frontend/src/app/api/export/route.ts)
+  que gera um `.xlsx` (via `exceljs`) com todas as peças.
+- Conexão por variáveis de ambiente (defaults para `localhost:8888`); ver
+  [frontend/.env.example](frontend/.env.example). Em produção, configure as variáveis
+  `PG*` na Vercel apontando para um PostgreSQL acessível pela internet.
 
 ---
 
@@ -169,8 +187,9 @@ docker compose up -d
 
 ```bash
 cd ComputerVision
-# crie o .env com pelo menos MQTT_BROKER e MQTT_PORT apontando para o broker
-uv sync          # ou: pip install opencv-python paho-mqtt python-dotenv
+# crie o .env com as variáveis de MQTT (MQTT_BROKER, MQTT_PORT, ...) e de
+# banco de dados (DATABASE_HOST, DATABASE_PORT, DATABASE_NAME, DATABASE_USER, DATABASE_PASS)
+uv sync          # ou: pip install opencv-python paho-mqtt psycopg2 python-dotenv
 uv run main.py   # ou: python main.py
 ```
 
@@ -190,6 +209,8 @@ cd frontend
 npm install
 npm run dev          # http://localhost:3000
 ```
+
+> Também disponível em produção na Vercel: <https://oee-arduino-frontend.vercel.app/>
 
 ---
 
@@ -215,16 +236,16 @@ registro de tempos de ciclo e paradas.
 
 Com base no código presente no repositório:
 
-- **Persistência ainda não conectada:** o frontend lê a tabela `pecas`, mas **nenhum serviço
-  atual insere registros nela** — o resultado da classificação é publicado em `oee/pc` e
-  consumido pelo Arduino, sem gravar no PostgreSQL. É necessário um consumidor MQTT que escreva
-  na tabela `pecas` para que o dashboard mostre dados reais.
-- As duas consultas do dashboard (`buscaDiaAtual` e `buscaSemanaAtual`) são atualmente idênticas
-  e agregam por mês (`DATE_TRUNC('month', ...)`), apesar dos nomes/rótulos sugerirem dia/semana/hora.
 - O cálculo completo do OEE (Disponibilidade e Desempenho) ainda não está implementado em código;
-  o sistema hoje cobre a captura, classificação e atuação física.
+  o sistema hoje cobre a captura, classificação, **persistência** e atuação física — ou seja,
+  cobre diretamente o pilar de **Qualidade**.
 - A classificação distingue peças por **número de vértices** do contorno; requer calibração dos
   parâmetros de visão para o ambiente real.
+- O serviço de visão grava no banco **sem reconexão automática**: se a conexão com o PostgreSQL
+  cair, é necessário reiniciar o serviço.
+- O dashboard hospedado na Vercel depende de um PostgreSQL acessível pela internet; com as
+  credenciais padrão apontando para `localhost`, ele só exibe dados quando o banco está acessível
+  a partir do ambiente de execução.
 
 > Estas observações refletem o código tal como está no repositório no momento desta documentação
 > e devem ser confirmadas/atualizadas conforme o projeto evolui.
