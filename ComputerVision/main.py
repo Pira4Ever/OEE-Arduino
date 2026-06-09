@@ -94,18 +94,12 @@ class MyClient():
     publish_topic: str
     detector: Detector
     def __init__(self, broker: str, port: int, publish_topic: str, subscribe_topic: str):
-        self.client = mqtt_client.Client(client_id='python-client',callback_api_version=CallbackAPIVersion.VERSION2,protocol=mqtt_client.MQTTv5)
-        self.client.on_connect = self.on_connect
         self.publish_topic = publish_topic
-        if (mqtt_user != "" or mqtt_pass != ""):
-            self.client.tls_set()
-            self.client.username_pw_set(mqtt_user, mqtt_pass)
-        self.client.connect(broker, port)
-        self.client.subscribe(subscribe_topic)
-        self.client.on_message = self.on_message
-        self.detector = Detector(1)
-        self.client.loop_start()
 
+        # Conecta ao banco e prepara o detector ANTES de iniciar o loop MQTT.
+        # loop_start() roda os callbacks (on_message) em uma thread separada;
+        # se uma mensagem chegasse antes destes atributos existirem, on_message
+        # falharia com AttributeError ('cursor'/'detector').
         self.conexao = connect(
             host=database_host,
             database=database_name,
@@ -113,8 +107,18 @@ class MyClient():
             password=database_pass,
             port=int(database_port)
         )
-
         self.cursor = self.conexao.cursor()
+        self.detector = Detector(1)
+
+        self.client = mqtt_client.Client(client_id='python-client',callback_api_version=CallbackAPIVersion.VERSION2,protocol=mqtt_client.MQTTv5)
+        self.client.on_connect = self.on_connect
+        self.client.on_message = self.on_message
+        if (mqtt_user != "" or mqtt_pass != ""):
+            self.client.tls_set()
+            self.client.username_pw_set(mqtt_user, mqtt_pass)
+        self.client.connect(broker, port)
+        self.client.subscribe(subscribe_topic)
+        self.client.loop_start()
         
     def on_connect(self, client, userdata, flags, reason_code, properties):
         if reason_code == 0:
