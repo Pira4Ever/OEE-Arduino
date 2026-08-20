@@ -287,7 +287,7 @@ OEE-Arduino/
 ## 👥 Contribuidores
 
 [<img src="https://avatars.githubusercontent.com/u/59701790?size=100" width="80" height="80" alt="Octavio Piratininga" style="border-radius:50%;">](https://github.com/Pira4Ever)
-[<img src="https://avatars.githubusercontent.com/u/269061644?size=100" width="80" height="80" alt="Yuri Tavares" style="border-radius:50%;">](https://github.com/YuriTV07)
+[<img src="https://avatars.githubusercontent.com/u/269061644?size=100" width="80" height="80" alt="Yuri Tavares" style="border-radius:50%;">](https://github.com/yuritavaresx)
 [<img src="https://avatars.githubusercontent.com/u/269567747?size=100" width="80" height="80" alt="Gustavo Henrique Teles" style="border-radius:50%;">](https://github.com/Gustavera5)
 [<img src="https://avatars.githubusercontent.com/u/269211557?size=100" width="80" height="80" alt="Lopes" style="border-radius:50%;">](https://github.com/daviponteslopes12-web)
 [<img src="https://avatars.githubusercontent.com/u/286823963?size=100" width="80" height="80" alt="Henrique Domingues" style="border-radius:50%;">](https://github.com/rique-dmngs)
